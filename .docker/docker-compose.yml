@@ -1,8 +1,8 @@
 version: '3.7'
 
 services:
-  minimalism-api-caller:
-    container_name: minimalism-api-caller
+  minimalism-service-api-caller:
+    container_name: minimalism-service-api-caller
     image: carlonicora/php-cli-base:7.4.3.2
     working_dir: /app
     volumes:

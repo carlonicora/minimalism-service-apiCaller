@@ -2,14 +2,13 @@
 namespace carlonicora\minimalism\services\apiCaller;
 
 use carlonicora\minimalism\core\services\exceptions\serviceNotFoundException;
-use carlonicora\minimalism\core\jsonapi\resources\errorObject;
-use carlonicora\minimalism\core\jsonapi\resources\resourceObject;
-use carlonicora\minimalism\core\jsonapi\responses\dataResponse;
 use carlonicora\minimalism\core\services\abstracts\abstractService;
 use carlonicora\minimalism\core\services\interfaces\serviceConfigurationsInterface;
+use carlonicora\minimalism\modules\jsonapi\resources\errorObject;
+use carlonicora\minimalism\modules\jsonapi\resources\resourceObject;
+use carlonicora\minimalism\modules\jsonapi\responses\dataResponse;
 use carlonicora\minimalism\services\apiCaller\configurations\apiCallerConfigurations;
 use carlonicora\minimalism\core\services\factories\servicesFactory;
-use carlonicora\minimalism\services\security\factories\serviceFactory;
 use carlonicora\minimalism\services\security\security;
 
 class apiCaller extends abstractService {
@@ -80,7 +79,7 @@ class apiCaller extends abstractService {
         }
 
         /** @var security $security */
-        $security = $this->services->service(serviceFactory::class);
+        $security = $this->services->service(security::class);
 
         $signature = $security->generateSignature($verb, $endpoint, $body, $security->getClientId(), $security->getClientSecret(), $security->getPublicKey(), $security->getPrivateKey());
         $httpHeaders[] = $security->getHttpHeaderSignature() . ':' . $signature;
