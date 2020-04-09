@@ -1,28 +1,67 @@
-# minimalism service
+# minimalism-service-api-caller
 
-**apiCaller** is a service for *minimalism* that implements API calls to [{json:api}](https://jsonapi.org) services.
+**minimalism-service-api-caller** is a service for [minimalism](https://github.com/carlonicora/minimalism) to call
+[{json:api}](https://jsonapi.org) based APIs.
 
-# Requirements
+## Getting Started
 
-apiCaller requires the following minimalism services:
+To use this library, you need to have an application using minimalism. This library does not work outside this scope.
 
-* minimalism-sercurity (included in *minimalism*)
+### Prerequisite
 
-# Usage
+You should have read the [minimalism documentation](https://github.com/carlonicora/minimalism/readme.md) and understand
+the concepts of services in the framework.
 
-To retrieve the apiCaller service, just load it from the list of minimalism services:
+Encrypter requires either the [cURL](https://www.php.net/manual/en/book.curl.php) extension in order to work.
+
+### Installing
+
+Require this package, with [Composer](https://getcomposer.org/), in the root directory of your project.
 
 ```
-$apiCaller = $this->services->service(\carlonicora\minimalism\services\apiCaller\apiCaller::class);
+$ composer require carlonicora/minimalism-service-api-caller
 ```
 
-To use it, just use the `call` function, which returns a `dataResponse`
+or simply add the requirement in `composer.json`
 
+```json
+{
+    "require": {
+        "carlonicora/minimalism-service-api-caller": "~1.0"
+    }
+}
 ```
-$apiResponse = $apiCaller->call(
-            'PUT', //verb
-            'https://api.domain.com', //url
-            '/v1.0/endpoint', //endpoint
-            ['name' => $name, 'value' => $value] //body
-);
+
+## Deployment
+
+This service does not require any parameter in your `.env` file in order to work. You can, however, specify if you allow
+unsafe calls
+
+### Optional parameters
+
+```dotenv
+#default to false
+ALLOW_UNSAFE_API_CALLS=true|false
 ```
+
+## Build With
+
+* [minimalism](https://github.com/carlonicora/minimalism) - minimal modular PHP MVC framework
+* [minimalism-service-jsonapi](https://github.com/carlonicora/minimalism-service-jsonapi)
+* [minimalism-service-security](https://github.com/carlonicora/minimalism-service-security)
+
+## Versioning
+
+This project use [Semantiv Versioning](https://semver.org/) for its tags.
+
+## Authors
+
+* **Carlo Nicora** - Initial version - [GitHub](https://github.com/carlonicora) |
+[phlow](https://phlow.com/@carlo)
+
+# License
+
+This project is licensed under the [MIT license](https://opensource.org/licenses/MIT) - see the
+[LICENSE.md](LICENSE.md) file for details 
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
