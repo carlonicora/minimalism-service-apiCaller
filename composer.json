@@ -1,12 +1,12 @@
 {
   "name": "carlonicora/minimalism-service-api-caller",
   "description": "Api Caller service for minimalism",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0",
   "homepage": "https://carlonicora.com",
   "time": "2020-04-05",
   "license": "MIT",
   "type": "library",
-  "minimum-stability": "beta",
+  "minimum-stability": "stable",
   "authors": [
     {
       "name": "Carlo Nicora",
@@ -25,6 +25,7 @@
     "ext-curl": "*",
     "ext-json": "*",
     "carlonicora/minimalism": "~10.0",
-    "carlonicora/minimalism-module-jsonapi": "~1.0"
+    "carlonicora/minimalism-service-jsonapi": "~1.0",
+    "carlonicora/minimalism-service-security": "~1.0"
   }
 }
