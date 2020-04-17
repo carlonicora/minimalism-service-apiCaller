@@ -10,6 +10,7 @@ use carlonicora\minimalism\service\jsonapi\responses\dataResponse;
 use carlonicora\minimalism\services\apiCaller\configurations\apiCallerConfigurations;
 use carlonicora\minimalism\core\services\factories\servicesFactory;
 use carlonicora\minimalism\services\security\security;
+use JsonException;
 
 class apiCaller extends abstractService {
     /** @var apiCallerConfigurations */
@@ -34,6 +35,7 @@ class apiCaller extends abstractService {
      * @param array|null $body
      * @param string $hostname
      * @return dataResponse
+     * @throws JsonException
      * @throws serviceNotFoundException
      */
     public function call(string $verb, string $url, string $endpoint, array $body=null, string $hostname=null): dataResponse{
