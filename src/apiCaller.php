@@ -4,11 +4,11 @@ namespace carlonicora\minimalism\services\apiCaller;
 use carlonicora\minimalism\core\services\exceptions\serviceNotFoundException;
 use carlonicora\minimalism\core\services\abstracts\abstractService;
 use carlonicora\minimalism\core\services\interfaces\serviceConfigurationsInterface;
-use carlonicora\minimalism\service\jsonapi\resources\errorObject;
-use carlonicora\minimalism\service\jsonapi\resources\resourceObject;
-use carlonicora\minimalism\service\jsonapi\responses\dataResponse;
 use carlonicora\minimalism\services\apiCaller\configurations\apiCallerConfigurations;
 use carlonicora\minimalism\core\services\factories\servicesFactory;
+use carlonicora\minimalism\services\jsonapi\resources\errorObject;
+use carlonicora\minimalism\services\jsonapi\resources\resourceObject;
+use carlonicora\minimalism\services\jsonapi\responses\dataResponse;
 use carlonicora\minimalism\services\security\security;
 use JsonException;
 
