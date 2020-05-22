@@ -10,7 +10,7 @@ To use this library, you need to have an application using minimalism. This libr
 ### Prerequisite
 
 You should have read the [minimalism documentation](https://github.com/carlonicora/minimalism/readme.md) and understand
-the concepts of services in the framework.
+the concepts of Services in the framework.
 
 Encrypter requires either the [cURL](https://www.php.net/manual/en/book.curl.php) extension in order to work.
 

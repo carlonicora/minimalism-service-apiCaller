@@ -1,27 +1,25 @@
 <?php
-namespace carlonicora\minimalism\services\apiCaller;
+namespace CarloNicora\Minimalism\Services\ApiCaller;
 
-use carlonicora\minimalism\core\services\exceptions\serviceNotFoundException;
-use carlonicora\minimalism\core\services\abstracts\abstractService;
-use carlonicora\minimalism\core\services\interfaces\serviceConfigurationsInterface;
-use carlonicora\minimalism\services\apiCaller\configurations\apiCallerConfigurations;
-use carlonicora\minimalism\core\services\factories\servicesFactory;
-use carlonicora\minimalism\services\jsonapi\resources\errorObject;
-use carlonicora\minimalism\services\jsonapi\resources\resourceObject;
-use carlonicora\minimalism\services\jsonapi\responses\dataResponse;
-use carlonicora\minimalism\services\security\security;
+use CarloNicora\JsonApi\Document;
+use CarloNicora\Minimalism\Core\Services\Abstracts\AbstractService;
+use CarloNicora\Minimalism\Core\Services\Interfaces\ServiceConfigurationsInterface;
+use CarloNicora\Minimalism\Services\ApiCaller\Configurations\ApiCallerConfigurations;
+use CarloNicora\Minimalism\Core\Services\Factories\ServicesFactory;
+use CarloNicora\Minimalism\Services\Security\Security;
+use Exception;
 use JsonException;
 
-class apiCaller extends abstractService {
-    /** @var apiCallerConfigurations */
-    private apiCallerConfigurations $configData;
+class ApiCaller extends abstractService {
+    /** @var ApiCallerConfigurations */
+    private ApiCallerConfigurations $configData;
 
     /**
      * abstractApiCaller constructor.
-     * @param serviceConfigurationsInterface $configData
-     * @param servicesFactory $services
+     * @param ServiceConfigurationsInterface $configData
+     * @param ServicesFactory $services
      */
-    public function __construct(serviceConfigurationsInterface $configData, servicesFactory $services) {
+    public function __construct(ServiceConfigurationsInterface $configData, ServicesFactory $services) {
         parent::__construct($configData, $services);
 
         /** @noinspection PhpFieldAssignmentTypeMismatchInspection */
@@ -33,12 +31,12 @@ class apiCaller extends abstractService {
      * @param string $url
      * @param string $endpoint
      * @param array|null $body
-     * @param string $hostname
-     * @return dataResponse
-     * @throws JsonException
-     * @throws serviceNotFoundException
+     * @param string|null $hostname
+     * @return Document
+     * @throws JsonException|Exception
      */
-    public function call(string $verb, string $url, string $endpoint, array $body=null, string $hostname=null): dataResponse{
+    public function call(string $verb, string $url, string $endpoint, array $body=null, string $hostname=null): Document
+    {
         $curl = curl_init();
         $httpHeaders = array();
 
@@ -81,10 +79,12 @@ class apiCaller extends abstractService {
         }
 
         /** @var security $security */
-        $security = $this->services->service(security::class);
+        $security = $this->services->service(Security::class);
 
-        $signature = $security->generateSignature($verb, $endpoint, $body, $security->getClientId(), $security->getClientSecret(), $security->getPublicKey(), $security->getPrivateKey());
-        $httpHeaders[] = $security->getHttpHeaderSignature() . ':' . $signature;
+        if (!empty($security->getClientId())) {
+            $signature = $security->generateSignature($verb, $endpoint, $body, $security->getClientId(), $security->getClientSecret(), $security->getPublicKey(), $security->getPrivateKey());
+            $httpHeaders[] = $security->getHttpHeaderSignature() . ':' . $signature;
+        }
 
         $info = null;
         $httpCode = null;
@@ -97,7 +97,7 @@ class apiCaller extends abstractService {
             CURLOPT_HEADER => 1
         ];
 
-        if ($this->configData->allowUnsafeApiCalls){
+        if ($this->configData->getAllowUnsafeApiCalls()){
             /** @noinspection CurlSslServerSpoofingInspection */
             $options[CURLOPT_SSL_VERIFYPEER] = false;
             /** @noinspection CurlSslServerSpoofingInspection */
@@ -111,41 +111,12 @@ class apiCaller extends abstractService {
         $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $returnedJson = substr($curlResponse, $header_size);
 
-        $info = curl_getinfo($curl);
-
         if (isset($curl)) {
             curl_close($curl);
         }
 
         $apiResponse = json_decode($returnedJson, true, 512, JSON_THROW_ON_ERROR);
 
-        if (false === in_array($info['http_code'], [200, 201, 204], true)) {
-            $response = new dataResponse();
-
-            if (array_key_exists('errors', $apiResponse)){
-                foreach ($apiResponse['errors'] as $error){
-                    $response->addError(new errorObject($error));
-                }
-            }
-        } else {
-            $data = $apiResponse['data'];
-            $response = new dataResponse($data);
-        }
-
-        if (array_key_exists('meta', $apiResponse)){
-            $response->addMetas($apiResponse['meta']);
-        }
-
-        if (array_key_exists('links', $apiResponse)){
-            $response->addLinks($apiResponse['links']);
-        }
-
-        if (array_key_exists('included', $apiResponse)){
-            foreach ($apiResponse['included'] as $included){
-                $response->addIncluded(new resourceObject($included));
-            }
-        }
-
-        return $response;
+        return new Document($apiResponse);
     }
 }
