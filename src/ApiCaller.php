@@ -115,7 +115,10 @@ class ApiCaller extends abstractService {
             curl_close($curl);
         }
 
-        $apiResponse = json_decode($returnedJson, true, 512, JSON_THROW_ON_ERROR);
+        $apiResponse = null;
+        if (false === empty($returnedJson)) {
+            $apiResponse = json_decode($returnedJson, true, 512, JSON_THROW_ON_ERROR);
+        }
 
         return new Document($apiResponse);
     }
