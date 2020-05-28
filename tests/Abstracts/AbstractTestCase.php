@@ -2,6 +2,7 @@
 namespace CarloNicora\Minimalism\Services\ApiCaller\Tests\Abstracts;
 
 use CarloNicora\Minimalism\Core\Services\Factories\ServicesFactory;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
@@ -10,6 +11,7 @@ abstract class AbstractTestCase extends TestCase
 {
     /**
      * @return ServicesFactory
+     * @throws Exception
      */
     protected function getServices() : ServicesFactory
     {

@@ -5,11 +5,13 @@ use CarloNicora\Minimalism\Services\ApiCaller\ApiCaller;
 use CarloNicora\Minimalism\Services\ApiCaller\Configurations\ApiCallerConfigurations;
 use CarloNicora\Minimalism\Services\ApiCaller\Factories\ServiceFactory;
 use CarloNicora\Minimalism\Services\ApiCaller\Tests\Abstracts\AbstractTestCase;
+use Exception;
 
 class ServiceFactoryTest extends AbstractTestCase
 {
     /**
      * @return ServiceFactory
+     * @throws Exception
      */
     public function testServiceInitialisation() : ServiceFactory
     {
@@ -23,6 +25,7 @@ class ServiceFactoryTest extends AbstractTestCase
     /**
      * @param ServiceFactory $service
      * @depends testServiceInitialisation
+     * @throws Exception
      */
     public function testServiceCreation(ServiceFactory $service) : void
     {
