@@ -1,13 +1,13 @@
 <?php
 namespace CarloNicora\Minimalism\Services\ApiCaller\Factories;
 
-use CarloNicora\Minimalism\core\Services\exceptions\configurationException;
-use CarloNicora\Minimalism\core\Services\abstracts\abstractServiceFactory;
+use CarloNicora\Minimalism\Core\Services\Abstracts\AbstractServiceFactory;
+use CarloNicora\Minimalism\Core\Services\Exceptions\ConfigurationException;
+use CarloNicora\Minimalism\Core\Services\Factories\ServicesFactory;
 use CarloNicora\Minimalism\Services\ApiCaller\ApiCaller;
 use CarloNicora\Minimalism\Services\ApiCaller\Configurations\ApiCallerConfigurations;
-use CarloNicora\Minimalism\core\Services\factories\ServicesFactory;
 
-class ServiceFactory extends abstractServiceFactory {
+class ServiceFactory extends AbstractServiceFactory {
     /**
      * serviceFactory constructor.
      * @param ServicesFactory $services
