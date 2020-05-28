@@ -32,10 +32,11 @@ class ApiCaller extends abstractService {
      * @param string $endpoint
      * @param array|null $body
      * @param string|null $hostname
+     * @param array $headers
      * @return Document
      * @throws JsonException|Exception
      */
-    public function call(string $verb, string $url, string $endpoint, array $body=null, string $hostname=null): Document
+    public function call(string $verb, string $url, string $endpoint, array $body=null, string $hostname=null, array &$headers=null): Document
     {
         $curl = curl_init();
         $httpHeaders = array();
@@ -44,24 +45,23 @@ class ApiCaller extends abstractService {
             $httpHeaders[] = 'Host: ' . $hostname;
         }
 
+        $httpHeaders[] = 'Content-Type:application/vnd.api+json';
+
         switch ($verb){
             case 'POST':
                 curl_setopt($curl, CURLOPT_POST, 1);
-                $httpHeaders[] = 'Content-Type:application/json';
                 if (is_array($body)) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($body, JSON_THROW_ON_ERROR, 512));
                 }
                 break;
             case 'PUT':
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
-                $httpHeaders[] = 'Content-Type:application/json';
                 if (is_array($body)) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($body, JSON_THROW_ON_ERROR, 512));
                 }
                 break;
             case 'DELETE':
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-                $httpHeaders[] = 'Content-Type:application/json';
                 if (is_array($body)) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($body, JSON_THROW_ON_ERROR, 512));
                 }
@@ -109,13 +109,28 @@ class ApiCaller extends abstractService {
         $curlResponse = curl_exec($curl);
 
         $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+
+        if ($headers !== null) {
+            $a = substr($curlResponse, 0, $header_size);
+
+            foreach (preg_split('/\n|\r\n?/', $a) ?? [] as $headerElement) {
+                if (!empty($headerElement)) {
+                    [$headerName, $headerValue] = explode(':', $headerElement);
+                    $headers[$headerName] = $headerValue;
+                }
+            }
+        }
+
         $returnedJson = substr($curlResponse, $header_size);
 
         if (isset($curl)) {
             curl_close($curl);
         }
 
-        $apiResponse = json_decode($returnedJson, true, 512, JSON_THROW_ON_ERROR);
+        $apiResponse = null;
+        if (false === empty($returnedJson)) {
+            $apiResponse = json_decode($returnedJson, true, 512, JSON_THROW_ON_ERROR);
+        }
 
         return new Document($apiResponse);
     }
